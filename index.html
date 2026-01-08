@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Little Lemon Restaurant</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff8e1;
+            padding: 30px;
+        }
+
+        h1, h2 {
+            color: #2e7d32;
+        }
+
+        nav button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            border: none;
+            background-color: #2e7d32;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        section {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px 0;
+            width: 200px;
+        }
+
+        button.action {
+            padding: 8px 12px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 8px;
+            background: #f1f1f1;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        .delete {
+            float: right;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🍋 Little Lemon Restaurant</h1>
+
+<nav>
+    <button onclick="showSection('menu')">Menu API</button>
+    <button onclick="showSection('booking')">Booking API</button>
+</nav>
+
+<!-- MENU SECTION -->
+<section id="menu">
+    <h2>📖 Menu (GET)</h2>
+    <ul id="menuList"></ul>
+</section>
+
+<!-- BOOKING SECTION -->
+<section id="booking" style="display:none;">
+    <h2>📅 Table Booking API</h2>
+
+    <h3>Create Booking (POST)</h3>
+    <input type="text" id="name" placeholder="Customer Name"><br>
+    <input type="date" id="date"><br>
+    <button class="action" onclick="addBooking()">Book Table</button>
+
+    <h3>All Bookings (GET)</h3>
+    <ul id="bookingList"></ul>
+</section>
+
+<script>
+    // ===== Fake Database =====
+    const menu = [
+        { id: 1, name: "Pizza", price: 12 },
+        { id: 2, name: "Pasta", price: 10 },
+        { id: 3, name: "Salad", price: 8 }
+    ];
+
+    const bookings = [
+        { name: "Ali", date: "2026-01-10" },
+        { name: "Sara", date: "2026-01-12" }
+    ];
+
+    // ===== MENU API =====
+    const menuList = document.getElementById("menuList");
+
+    menu.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.name} - $${item.price}`;
+        menuList.appendChild(li);
+    });
+
+    // ===== BOOKING API =====
+    const bookingList = document.getElementById("bookingList");
+
+    function renderBookings() {
+        bookingList.innerHTML = "";
+        bookings.forEach((b, index) => {
+            const li = document.createElement("li");
+            li.innerHTML = `${b.name} - ${b.date}
+            <button class="delete" onclick="deleteBooking(${index})">DELETE</button>`;
+            bookingList.appendChild(li);
+        });
+    }
+
+    function addBooking() {
+        const name = document.getElementById("name").value;
+        const date = document.getElementById("date").value;
+
+        if (!name || !date) {
+            alert("Please fill all fields");
+            return;
+        }
+
+        bookings.push({ name, date });
+        renderBookings();
+
+        document.getElementById("name").value = "";
+        document.getElementById("date").value = "";
+    }
+
+    function deleteBooking(index) {
+        bookings.splice(index, 1);
+        renderBookings();
+    }
+
+    // ===== NAVIGATION =====
+    function showSection(section) {
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("booking").style.display = "none";
+        document.getElementById(section).style.display = "block";
+    }
+
+    renderBookings();
+</script>
+
+</body>
+</html>
